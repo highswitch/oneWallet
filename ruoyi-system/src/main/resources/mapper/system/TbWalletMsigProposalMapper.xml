@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbWalletMsigProposalMapper">
+    
+    <resultMap type="TbWalletMsigProposal" id="TbWalletMsigProposalResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="walletId"    column="wallet_id"    />
+        <result property="walletMsigId"    column="wallet_msig_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="method"    column="method"    />
+        <result property="msgId"    column="msg_id"    />
+        <result property="isOwner"    column="is_owner"    />
+        <result property="msgUrl"    column="msg_url"    />
+        <result property="errMsg"    column="err_msg"    />
+        <result property="status"    column="status"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModity"    column="gmt_modity"    />
+    </resultMap>
+
+    <sql id="selectTbWalletMsigProposalVo">
+        select a.*
+        from tb_wallet_msig_proposal a
+    </sql>
+
+    <select id="selectTbWalletMsigProposalList" parameterType="TbWalletMsigProposal" resultMap="TbWalletMsigProposalResult">
+        <include refid="selectTbWalletMsigProposalVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="walletId != null "> and a.wallet_id = #{walletId}</if>
+            <if test="walletMsigId != null "> and a.wallet_msig_id = #{walletMsigId}</if>
+            <if test="taskId != null  and taskId != ''"> and a.task_id = #{taskId}</if>
+            <if test="method != null  and method != ''"> and a.method = #{method}</if>
+            <if test="msgId != null  and msgId != ''"> and a.msg_id = #{msgId}</if>
+            <if test="isOwner != null "> and a.is_owner = #{isOwner}</if>
+            <if test="msgUrl != null  and msgUrl != ''"> and a.msg_url = #{msgUrl}</if>
+            <if test="errMsg != null  and errMsg != ''"> and a.err_msg = #{errMsg}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="gmtCreate != null "> and a.gmt_create = #{gmtCreate}</if>
+            <if test="gmtModity != null "> and a.gmt_modity = #{gmtModity}</if>
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="selectTbWalletMsigProposalById" parameterType="Long" resultMap="TbWalletMsigProposalResult">
+        <include refid="selectTbWalletMsigProposalVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertTbWalletMsigProposal" parameterType="TbWalletMsigProposal" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_wallet_msig_proposal
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="walletId != null">wallet_id,</if>
+            <if test="walletMsigId != null">wallet_msig_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="method != null">method,</if>
+            <if test="msgId != null">msg_id,</if>
+            <if test="isOwner != null">is_owner,</if>
+            <if test="msgUrl != null">msg_url,</if>
+            <if test="errMsg != null">err_msg,</if>
+            <if test="status != null">status,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModity != null">gmt_modity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="walletId != null">#{walletId},</if>
+            <if test="walletMsigId != null">#{walletMsigId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="method != null">#{method},</if>
+            <if test="msgId != null">#{msgId},</if>
+            <if test="isOwner != null">#{isOwner},</if>
+            <if test="msgUrl != null">#{msgUrl},</if>
+            <if test="errMsg != null">#{errMsg},</if>
+            <if test="status != null">#{status},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModity != null">#{gmtModity},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbWalletMsigProposal" parameterType="TbWalletMsigProposal">
+        update tb_wallet_msig_proposal
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="walletId != null">wallet_id = #{walletId},</if>
+            <if test="walletMsigId != null">wallet_msig_id = #{walletMsigId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="method != null">method = #{method},</if>
+            <if test="msgId != null">msg_id = #{msgId},</if>
+            <if test="isOwner != null">is_owner = #{isOwner},</if>
+            <if test="msgUrl != null">msg_url = #{msgUrl},</if>
+            <if test="errMsg != null">err_msg = #{errMsg},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModity != null">gmt_modity = #{gmtModity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbWalletMsigProposalById" parameterType="Long">
+        delete from tb_wallet_msig_proposal where id = #{id}
+    </delete>
+
+    <delete id="deleteTbWalletMsigProposalByIds" parameterType="String">
+        delete from tb_wallet_msig_proposal where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <update id="updateStatusForIds" parameterType="String" >
+        update tb_wallet_msig_proposal set status = ${status} where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

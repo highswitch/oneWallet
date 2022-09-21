@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbFifoxMonitorMapper">
+    
+    <resultMap type="TbFifoxMonitor" id="TbFifoxMonitorResult">
+        <result property="id"    column="id"    />
+        <result property="url"    column="url"    />
+        <result property="nodes"    column="nodes"    />
+        <result property="emails"    column="emails"    />
+        <result property="status"    column="status"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModified"    column="gmt_modified"    />
+    </resultMap>
+
+    <sql id="selectTbFifoxMonitorVo">
+        select id, url, nodes, emails, status, gmt_create, gmt_modified from tb_fifox_monitor
+    </sql>
+
+    <select id="selectTbFifoxMonitorList" parameterType="TbFifoxMonitor" resultMap="TbFifoxMonitorResult">
+        <include refid="selectTbFifoxMonitorVo"/>
+        <where>  
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="nodes != null  and nodes != ''"> and nodes = #{nodes}</if>
+            <if test="emails != null  and emails != ''"> and emails = #{emails}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="gmtCreate != null "> and gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null "> and gmt_modified = #{gmtModified}</if>
+        </where>
+    </select>
+    
+    <select id="selectTbFifoxMonitorById" parameterType="Long" resultMap="TbFifoxMonitorResult">
+        <include refid="selectTbFifoxMonitorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTbFifoxMonitor" parameterType="TbFifoxMonitor" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_fifox_monitor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="url != null">url,</if>
+            <if test="nodes != null">nodes,</if>
+            <if test="emails != null">emails,</if>
+            <if test="status != null">status,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModified != null">gmt_modified,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="url != null">#{url},</if>
+            <if test="nodes != null">#{nodes},</if>
+            <if test="emails != null">#{emails},</if>
+            <if test="status != null">#{status},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModified != null">#{gmtModified},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbFifoxMonitor" parameterType="TbFifoxMonitor">
+        update tb_fifox_monitor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="url != null">url = #{url},</if>
+            <if test="nodes != null">nodes = #{nodes},</if>
+            <if test="emails != null">emails = #{emails},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModified != null">gmt_modified = #{gmtModified},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbFifoxMonitorById" parameterType="Long">
+        delete from tb_fifox_monitor where id = #{id}
+    </delete>
+
+    <delete id="deleteTbFifoxMonitorByIds" parameterType="String">
+        delete from tb_fifox_monitor where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

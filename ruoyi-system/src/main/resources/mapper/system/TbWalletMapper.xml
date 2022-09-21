@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbWalletMapper">
+    
+    <resultMap type="TbWallet" id="TbWalletResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="conf"    column="conf"    />
+        <result property="walletIndex"    column="wallet_index"    />
+        <result property="address"    column="address"    />
+        <result property="account"    column="account"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModity"    column="gmt_modity"    />
+        <result property="version"    column="version"    />
+    </resultMap>
+
+    <sql id="selectTbWalletVo">
+        select a.*, b.user_name
+        from tb_wallet a
+         LEFT JOIN sys_user b on a.user_id = b.user_id
+    </sql>
+
+    <select id="selectTbWalletList" parameterType="TbWallet" resultMap="TbWalletResult">
+        <include refid="selectTbWalletVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="conf != null  and conf != ''"> and a.conf = #{conf}</if>
+            <if test="walletIndex != null "> and a.wallet_index = #{walletIndex}</if>
+            <if test="address != null  and address != ''"> and a.address = #{address}</if>
+            <if test="account != null  and account != ''"> and a.account = #{account}</if>
+            <if test="type != null  and type != ''"> and a.type = #{type}</if>
+            <if test="gmtCreate != null "> and a.gmt_create = #{gmtCreate}</if>
+            <if test="gmtModity != null "> and a.gmt_modity = #{gmtModity}</if>
+            <if test="version != null "> and a.version = #{version}</if>
+            <if test="1 == 1">${params.dataScope}</if>
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="selectTbWalletById" parameterType="Long" resultMap="TbWalletResult">
+        <include refid="selectTbWalletVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertTbWallet" parameterType="TbWallet" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_wallet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="conf != null">conf,</if>
+            <if test="walletIndex != null">wallet_index,</if>
+            <if test="address != null">address,</if>
+            <if test="account != null">account,</if>
+            <if test="type != null">type,</if>
+            <if test="isPrivate != null">is_private,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModity != null">gmt_modity,</if>
+            <if test="version != null">version,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="conf != null">#{conf},</if>
+            <if test="walletIndex != null">#{walletIndex},</if>
+            <if test="address != null">#{address},</if>
+            <if test="account != null">#{account},</if>
+            <if test="type != null">#{type},</if>
+            <if test="isPrivate != null">#{isPrivate},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModity != null">#{gmtModity},</if>
+            <if test="version != null">#{version},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbWallet" parameterType="TbWallet">
+        update tb_wallet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="version != null">version = #{version},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbWalletById" parameterType="Long">
+        delete from tb_wallet where id = #{id}
+    </delete>
+
+    <delete id="deleteTbWalletByIds" parameterType="String">
+        delete from tb_wallet where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getListByUser" parameterType="TbWallet" resultMap="TbWalletResult">
+        select id, name, account, type
+        from tb_wallet
+        where user_id = #{userId}
+    </select>
+    <select id="selectTbWalletByAccounts" parameterType="String" resultMap="TbWalletResult">
+        select * from tb_wallet where account in
+        <foreach item="account" collection="array" open="(" separator="," close=")">
+            #{account}
+        </foreach>
+    </select>
+</mapper>

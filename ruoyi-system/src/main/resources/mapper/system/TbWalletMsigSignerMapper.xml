@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbWalletMsigSignerMapper">
+    
+    <resultMap type="TbWalletMsigSigner" id="TbWalletMsigSignerResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="walletMsigId"    column="wallet_msig_id"    />
+        <result property="walletId"    column="wallet_id"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+    </resultMap>
+
+    <sql id="selectTbWalletMsigSignerVo">
+        select a.*
+        from tb_wallet_msig_signer a
+    </sql>
+
+    <select id="selectTbWalletMsigSignerList" parameterType="TbWalletMsigSigner" resultMap="TbWalletMsigSignerResult">
+        <include refid="selectTbWalletMsigSignerVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="walletMsigId != null "> and a.wallet_msig_id = #{walletMsigId}</if>
+            <if test="walletId != null "> and a.wallet_id = #{walletId}</if>
+            <if test="gmtCreate != null "> and a.gmt_create = #{gmtCreate}</if>
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="selectTbWalletMsigSignerById" parameterType="Long" resultMap="TbWalletMsigSignerResult">
+        <include refid="selectTbWalletMsigSignerVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertTbWalletMsigSigner" parameterType="TbWalletMsigSigner" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_wallet_msig_signer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="walletMsigId != null">wallet_msig_id,</if>
+            <if test="walletId != null">wallet_id,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="walletMsigId != null">#{walletMsigId},</if>
+            <if test="walletId != null">#{walletId},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbWalletMsigSigner" parameterType="TbWalletMsigSigner">
+        update tb_wallet_msig_signer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="walletMsigId != null">wallet_msig_id = #{walletMsigId},</if>
+            <if test="walletId != null">wallet_id = #{walletId},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbWalletMsigSignerById" parameterType="Long">
+        delete from tb_wallet_msig_signer where id = #{id}
+    </delete>
+
+    <delete id="deleteTbWalletMsigSignerByIds" parameterType="String">
+        delete from tb_wallet_msig_signer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <insert id="bathcInsert" parameterType="java.util.List">
+        replace INTO tb_wallet_msig_signer(user_id, wallet_msig_id, wallet_id, account, gmt_create)
+        values
+        <foreach collection="list"  separator="," item="item">
+            (
+            #{item.userId, jdbcType=BIGINT},
+            #{item.walletMsigId, jdbcType=BIGINT},
+            #{item.walletId, jdbcType=BIGINT},
+            #{item.account, jdbcType=VARCHAR},
+            #{item.gmtCreate, jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbWalletBindMapper">
+    
+    <resultMap type="TbWalletBind" id="TbWalletBindResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="walletId"    column="wallet_id"    />
+        <result property="walletName"    column="wallet_name"    />
+        <result property="walletAccount"    column="wallet_account"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModity"    column="gmt_modity"    />
+    </resultMap>
+
+    <sql id="selectTbWalletBindVo">
+        select a.*
+        from tb_wallet_bind a
+    </sql>
+
+    <select id="selectTbWalletBindList" parameterType="TbWalletBind" resultMap="TbWalletBindResult">
+        <include refid="selectTbWalletBindVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="walletId != null "> and a.wallet_id = #{walletId}</if>
+            <if test="gmtCreate != null "> and a.gmt_create = #{gmtCreate}</if>
+            <if test="gmtModity != null "> and a.gmt_modity = #{gmtModity}</if>
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="selectTbWalletBindById" parameterType="Long" resultMap="TbWalletBindResult">
+        <include refid="selectTbWalletBindVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertTbWalletBind" parameterType="TbWalletBind" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_wallet_bind
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="walletId != null">wallet_id,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModity != null">gmt_modity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="walletId != null">#{walletId},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModity != null">#{gmtModity},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbWalletBind" parameterType="TbWalletBind">
+        update tb_wallet_bind
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="walletId != null">wallet_id = #{walletId},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModity != null">gmt_modity = #{gmtModity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbWalletBindById" parameterType="Long">
+        delete from tb_wallet_bind where id = #{id}
+    </delete>
+
+    <delete id="deleteTbWalletBindByIds" parameterType="String">
+        delete from tb_wallet_bind where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectTbWalletBindByUserId" parameterType="Long" resultMap="TbWalletBindResult">
+        select name as wallet_name, account as wallet_account, a.*
+        from tb_wallet_bind a
+                 LEFT JOIN tb_wallet b on a.wallet_id = b.id
+        where a.user_id = ${userId} order by a.gmt_create desc
+    </select>
+</mapper>

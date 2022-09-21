@@ -1,0 +1,45 @@
+package com.payment.model.base;
+
+import com.jfinal.plugin.activerecord.Model;
+import com.jfinal.plugin.activerecord.IBean;
+
+
+public abstract class Base${ClassName}<M extends Base${ClassName}<M>> extends Model<M> implements IBean {
+private static final long serialVersionUID = 1L;
+
+/**
+* 对应的数据库表名称
+*/
+public static final String tableName = "${tableName}";
+
+/**
+* 对应的数据表字段名称
+*/
+public class Column {
+#foreach ($column in $columns)
+/** $column.columnComment */
+public static final String $column.javaField ="$column.columnName";
+#end
+}
+
+#foreach ($column in $columns)
+#if(!$table.isSuperColumn($column.javaField))
+#if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
+#set($AttrName=$column.javaField)
+#else
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+
+/** $column.columnComment */
+public M set${AttrName}($column.javaType $column.javaField) {
+set("$column.columnName" , $column.javaField);
+return (M) this;
+}
+
+public $column.javaType get${AttrName}() {
+return get("$column.columnName");
+}
+#end
+#end
+#end
+
+}

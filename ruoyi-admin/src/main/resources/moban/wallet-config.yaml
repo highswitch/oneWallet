@@ -1,0 +1,20 @@
+# account
+#   mnemonic: Please save the mnemonic and do not upload it anywhere.
+#   password：Use a password to participate in the derivation, this can increase security.
+#   key: Will support the private key exported by lotus, and it will take precedence over the mnemonic
+account:
+  mnemonic: ${mnemonic}
+  password: false  # true / false
+  key: ${key}
+  keyFormat: hex-lotus # key format: hex-lotus / json-lotus / gfc-json
+
+# chain
+#   maxFee: Max limit Fee when auto acquiring gas
+#   rpcAddr: Accessible filecoin network node rpc address
+#   token: Fill in when lotus daemon asks for token, because missing permission to invoke 'MpoolPush' (need 'write'). Not required for special node, such as infura
+#   explorer: The block explorer address of the filecoin network
+chain:
+  maxFee: 1FIL
+  rpcAddr: https://api.node.glif.io/rpc/v0
+  token:
+  explorer: https://filfox.info/en/message/

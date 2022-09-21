@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TbTransferMapper">
+    
+    <resultMap type="TbTransfer" id="TbTransferResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="walletId"    column="wallet_id"    />
+        <result property="formAccount"    column="form_account"    />
+        <result property="toAccount"    column="to_account"    />
+        <result property="amount"    column="amount"    />
+        <result property="messageId"    column="message_id"    />
+        <result property="operationUserId"    column="operation_user_id"    />
+        <result property="gmtCreate"    column="gmt_create"    />
+        <result property="gmtModity"    column="gmt_modity"    />
+        <result property="walletName"    column="wallet_name"    />
+        <result property="userName"    column="user_name"    />
+        <result property="operationUserName"    column="operation_user_name"    />
+    </resultMap>
+
+    <sql id="selectTbTransferVo">
+        select b.name as wallet_name, c.user_name, d.user_name as operation_user_name, a.*
+        from tb_transfer a
+                 LEFT JOIN tb_wallet b on a.wallet_id = b.id
+                 LEFT JOIN sys_user c on a.user_id = c.user_id
+                 LEFT JOIN sys_user d on a.operation_user_id = d.user_id
+    </sql>
+
+    <select id="selectTbTransferList" parameterType="TbTransfer" resultMap="TbTransferResult">
+        <include refid="selectTbTransferVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="walletId != null "> and a.wallet_id = #{walletId}</if>
+            <if test="formAccount != null  and formAccount != ''"> and a.form_account = #{formAccount}</if>
+            <if test="toAccount != null  and toAccount != ''"> and a.to_account = #{toAccount}</if>
+            <if test="amount != null "> and a.amount = #{amount}</if>
+            <if test="messageId != null "> and a.message_id = #{messageId}</if>
+            <if test="operationUserId != null "> and a.operation_user_id = #{operationUserId}</if>
+            <if test="gmtCreate != null "> and a.gmt_create = #{gmtCreate}</if>
+            <if test="gmtModity != null "> and a.gmt_modity = #{gmtModity}</if>
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="selectTbTransferById" parameterType="Long" resultMap="TbTransferResult">
+        <include refid="selectTbTransferVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertTbTransfer" parameterType="TbTransfer" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_transfer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="walletId != null">wallet_id,</if>
+            <if test="formAccount != null">form_account,</if>
+            <if test="toAccount != null">to_account,</if>
+            <if test="amount != null">amount,</if>
+            <if test="messageId != null">message_id,</if>
+            <if test="operationUserId != null">operation_user_id,</if>
+            <if test="gmtCreate != null">gmt_create,</if>
+            <if test="gmtModity != null">gmt_modity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="walletId != null">#{walletId},</if>
+            <if test="formAccount != null">#{formAccount},</if>
+            <if test="toAccount != null">#{toAccount},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="messageId != null">#{messageId},</if>
+            <if test="operationUserId != null">#{operationUserId},</if>
+            <if test="gmtCreate != null">#{gmtCreate},</if>
+            <if test="gmtModity != null">#{gmtModity},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbTransfer" parameterType="TbTransfer">
+        update tb_transfer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="walletId != null">wallet_id = #{walletId},</if>
+            <if test="formAccount != null">form_account = #{formAccount},</if>
+            <if test="toAccount != null">to_account = #{toAccount},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="gmtCreate != null">gmt_create = #{gmtCreate},</if>
+            <if test="gmtModity != null">gmt_modity = #{gmtModity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbTransferById" parameterType="Long">
+        delete from tb_transfer where id = #{id}
+    </delete>
+
+    <delete id="deleteTbTransferByIds" parameterType="String">
+        delete from tb_transfer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="listByAccount" resultMap="TbTransferResult">
+        <include refid="selectTbTransferVo"></include>
+        <where>
+            <if test="type == 'all' "> and (a.form_account = #{account} or a.to_account = #{account} )</if>
+            <if test="type == 'into' "> and a.to_account = #{account} </if>
+            <if test="type == 'out' "> and a.form_account = #{account} </if>
+        </where>
+    </select>
+</mapper>
