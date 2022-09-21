@@ -136,9 +136,9 @@ wallet:
   folder: /root/fil-wallet
 
 mail:
-  user: sys-no-reply@qzlink.com
-  pwd: Hai123456
-  subject: 分销商系统监控异常
+  user: 邮件帐号
+  pwd: 邮件密码
+  subject: 主题
   content: "接口调用异常，请排查确认，apiKey: <br> %s"
   address:
     - "1113003302@qq.com"
